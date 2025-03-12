@@ -1,12 +1,10 @@
-# React + Vite
+# 🎁 GiftRSVP - Smart RSVP & Gift Coordination App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GiftRSVP is a web application that helps event organizers coordinate gifts efficiently. It ensures that every present is unique by preventing duplicates, allowing attendees to RSVP with their planned gifts, and suggesting unique gift ideas.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Features
+- **Event Creation**: Organizers can create events and generate a unique RSVP link.
+- **Gift Reservation**: Attendees can submit the gift they plan to bring.
+- **Duplicate Alerts**: If someone else is already bringing the same gift, an alert is shown.
+- **Gift Suggestions**: Get unique gift ideas for different occasions.
+- **User-Friendly Interface**: Simple and clean UI with a **purple-themed design**.
