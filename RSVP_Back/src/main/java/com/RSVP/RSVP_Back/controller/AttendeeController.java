@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/events")  // ✅ Matches frontend calls
-@CrossOrigin(origins = "http://localhost:5173") // ✅ Allow frontend access
+@RequestMapping("/api/events")  // Matches frontend calls
+@CrossOrigin(origins = "http://localhost:5173") // Allow frontend access
 public class AttendeeController {
 
     private final AttendeeService attendeeService;
@@ -18,10 +18,10 @@ public class AttendeeController {
         this.attendeeService = attendeeService;
     }
 
-    // ✅ Corrected API to check gift uniqueness
+    // Corrected API to check gift uniqueness
     @GetMapping("/{eventId}/attendees/check-gift")
     public ResponseEntity<Map<String, Boolean>> checkGiftUniqueness(
-            @PathVariable UUID eventId,  // ✅ Now correctly mapped
+            @PathVariable UUID eventId,  
             @RequestParam String gift) {
         boolean isUnique = attendeeService.isGiftUnique(eventId, gift);
         Map<String, Boolean> response = new HashMap<>();
@@ -29,14 +29,14 @@ public class AttendeeController {
         return ResponseEntity.ok(response);
     }
 
-    // ✅ Corrected API to register an attendee
     @PostMapping("/{eventId}/attendees")
     public ResponseEntity<?> registerAttendee(
-            @PathVariable UUID eventId,  // ✅ Now correctly mapped
+            @PathVariable UUID eventId,  
             @RequestBody Attendee attendee) {
         // Check if gift is unique
         if (!attendeeService.isGiftUnique(eventId, attendee.getGift())) {
             return ResponseEntity.badRequest().body("Gift is already taken. Please choose another one.");
+        
         }
 
         // Register attendee
@@ -45,7 +45,6 @@ public class AttendeeController {
         return ResponseEntity.ok("RSVP submitted successfully!");
     }
 
-    // ✅ Corrected API to get the total number of attendees
     @GetMapping("/{eventId}/attendees/count")
     public ResponseEntity<Integer> getAttendeeCount(@PathVariable UUID eventId) {
         int totalCount = attendeeService.getTotalAttendees(eventId);
