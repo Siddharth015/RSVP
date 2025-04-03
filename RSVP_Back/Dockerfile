@@ -1,14 +1,12 @@
-# Use an official OpenJDK runtime as a base image
-FROM openjdk:21-jdk-slim
-
-# Set working directory inside the container
+# Stage 1: Build the JAR
+FROM maven:3.8.6-openjdk-21 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy the built JAR file into the container
-COPY target/*.jar app.jar
-
-# Expose the port your Spring Boot application runs on
+# Stage 2: Run the application
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
