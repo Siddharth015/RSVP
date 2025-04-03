@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/api/events"; // Adjust if needed
+const BASE_URL = "https://rsvp-rfz9.onrender.com/api/events"; // Adjust if needed
 
 export const checkGiftUniqueness = async (eventId, gift) => {
   try {
