@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useParams, useNavigate } from "react-router-dom"; //  Import useNavigate
 
 const EventPage = () => {
-  const { eventId } = useParams(); // ✅ Ensure correct parameter name
-  const navigate = useNavigate(); // ✅ Get navigation function
+  const { eventId } = useParams(); //  Ensure correct parameter name
+  const navigate = useNavigate(); // Get navigation function
   const [name, setName] = useState("");
   const [numAttendees, setNumAttendees] = useState(1);
   const [gift, setGift] = useState("");
@@ -22,7 +22,7 @@ const EventPage = () => {
     setErrorMessage("");
 
     try {
-      const response = await fetch(`http://localhost:8080/api/events/${eventId}/attendees/check-gift?gift=${encodeURIComponent(gift)}`);
+      const response = await fetch(`https://rsvp-rfz9.onrender.com/api/events/${eventId}/attendees/check-gift?gift=${encodeURIComponent(gift)}`);
       const data = await response.json();
       setIsGiftUnique(data.isUnique);
       if (!data.isUnique) {
@@ -41,7 +41,7 @@ const EventPage = () => {
     if (!isGiftUnique) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/events/${eventId}/attendees`, {
+      const response = await fetch(`https://rsvp-rfz9.onrender.com/api/events/${eventId}/attendees`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ attendeeName: name, numAttendees, gift }),
@@ -49,7 +49,7 @@ const EventPage = () => {
 
       if (response.ok) {
         console.log("RSVP successful! Redirecting..."); // ✅ Debugging Log
-        navigate("/thank-you"); // ✅ Redirect
+        navigate("/thank-you"); // Redirect
       } else {
         setErrorMessage("Error submitting RSVP. Please try again.");
       }
