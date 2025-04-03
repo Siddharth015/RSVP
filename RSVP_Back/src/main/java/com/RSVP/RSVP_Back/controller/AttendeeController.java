@@ -9,7 +9,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/events")  // Matches frontend calls
-@CrossOrigin(origins = "http://localhost:5173") // Allow frontend access
+@CrossOrigin(origins = "https://rsvp-vcpu.vercel.app/") // Allow frontend access
 public class AttendeeController {
 
     private final AttendeeService attendeeService;
