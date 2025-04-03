@@ -1,25 +1,14 @@
-# Use an official OpenJDK runtime as a parent image
-FROM eclipse-temurin:17-jdk
+# Use an official OpenJDK runtime as a base image
+FROM openjdk:17-jdk-slim
 
-# Set the working directory in the container
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy the Maven wrapper files
-COPY mvnw mvnw
-COPY .mvn .mvn
+# Copy the built JAR file into the container
+COPY target/*.jar app.jar
 
-# Grant execute permissions to the Maven wrapper
-RUN chmod +x mvnw
-
-# Copy the project files
-COPY pom.xml .
-COPY src src
-
-# Install Maven dependencies and build the project
-RUN ./mvnw clean install -DskipTests
-
-# Expose the application port
+# Expose the port your Spring Boot application runs on
 EXPOSE 8080
 
-# Run the Spring Boot application
-CMD ["java", "-jar", "target/RSVP-0.0.1-SNAPSHOT.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
