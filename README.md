@@ -8,3 +8,7 @@ GiftRSVP is a web application that helps event organizers coordinate gifts effic
 - **Duplicate Alerts**: If someone else is already bringing the same gift, an alert is shown.
 - **Gift Suggestions**: Get unique gift ideas for different occasions.
 - **User-Friendly Interface**: Simple and clean UI with a **purple-themed design**.
+  
+## Demo Video
+
+https://drive.google.com/file/d/17Kh32bk6CzsTFQbtRVMwDzwoNjH6i0MU/view?usp=sharing
