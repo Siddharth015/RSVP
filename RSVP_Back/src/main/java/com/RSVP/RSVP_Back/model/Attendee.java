@@ -24,15 +24,21 @@ public class Attendee {
     @Column(nullable = false)
     private String gift;
 
+    // Canonical normalized key (from dropdown option or normalized free text)
+    @Column(nullable = true)
+    private String giftKey;
+
     // Getters and Setters
     public Long getId() { return id; }
     public UUID getEventId() { return eventId; }
     public String getAttendeeName() { return attendeeName; }
     public int getNumOfAttendees() { return numOfAttendees; }
     public String getGift() { return gift; }
+    public String getGiftKey() { return giftKey; }
 
     public void setEventId(UUID eventId) { this.eventId = eventId; }
     public void setAttendeeName(String attendeeName) { this.attendeeName = attendeeName; }
     public void setNumOfAttendees(int numOfAttendees) { this.numOfAttendees = numOfAttendees; }
     public void setGift(String gift) { this.gift = gift; }
+    public void setGiftKey(String giftKey) { this.giftKey = giftKey; }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; //  Import useNavigate
 
 const EventPage = () => {
@@ -10,6 +10,48 @@ const EventPage = () => {
   const [isGiftUnique, setIsGiftUnique] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [uniquenessMsg, setUniquenessMsg] = useState("");
+
+  // Dropdown-related state
+  const [giftOptions, setGiftOptions] = useState([]);
+  const [selectedGiftLabel, setSelectedGiftLabel] = useState("");
+  const [otherGift, setOtherGift] = useState("");
+
+  const API_BASE = import.meta.env.VITE_API_BASE;
+
+  if (!API_BASE) {
+    console.error("VITE_API_BASE is not configured. Please set it to your Render API base.");
+  }
+
+  // Load gift options for dropdown
+  useEffect(() => {
+    if (!eventId) return;
+    const fetchOptions = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/${eventId}/gift-options`);
+        if (res.ok) {
+          const data = await res.json();
+          setGiftOptions(data || []);
+        }
+      } catch (e) {
+        // noop: in local dev without backend this may 404; keep form usable
+      }
+    };
+    fetchOptions();
+  }, [eventId]);
+
+  // Keep `gift` in sync with dropdown selection and Other input
+  useEffect(() => {
+    if (selectedGiftLabel === "Other") {
+      setGift(otherGift);
+    } else {
+      setGift(selectedGiftLabel);
+    }
+    // reset uniqueness state on change
+    setIsGiftUnique(null);
+    setUniquenessMsg("");
+    setErrorMessage("");
+  }, [selectedGiftLabel, otherGift]);
 
   // ✅ Check gift uniqueness
   const checkGiftUniqueness = async () => {
@@ -22,9 +64,10 @@ const EventPage = () => {
     setErrorMessage("");
 
     try {
-      const response = await fetch(`https://rsvp-rfz9.onrender.com/api/events/${eventId}/attendees/check-gift?gift=${encodeURIComponent(gift)}`);
+      const response = await fetch(`${API_BASE}/${eventId}/attendees/check-gift?gift=${encodeURIComponent(gift)}`);
       const data = await response.json();
       setIsGiftUnique(data.isUnique);
+      setUniquenessMsg(data.isUnique ? "This gift is available." : "This gift has already been taken.");
       if (!data.isUnique) {
         setErrorMessage("This gift has already been taken! Please choose a different one.");
       }
@@ -41,10 +84,11 @@ const EventPage = () => {
     if (!isGiftUnique) return;
 
     try {
-      const response = await fetch(`https://rsvp-rfz9.onrender.com/api/events/${eventId}/attendees`, {
+      const finalGift = selectedGiftLabel === "Other" ? otherGift : selectedGiftLabel || gift;
+      const response = await fetch(`${API_BASE}/${eventId}/attendees`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ attendeeName: name, numAttendees, gift }),
+        body: JSON.stringify({ attendeeName: name, numAttendees, gift: finalGift }),
       });
 
       if (response.ok) {
@@ -87,22 +131,47 @@ const EventPage = () => {
 
         <div>
           <label className="block text-gray-700 font-medium">Gift You Plan to Bring</label>
-          <input
-            type="text"
-            value={gift}
-            onChange={(e) => setGift(e.target.value)}
-            required
+          {/* Dropdown */}
+          <select
+            value={selectedGiftLabel}
+            onChange={(e) => setSelectedGiftLabel(e.target.value)}
             className="w-full mt-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            placeholder="Enter gift name"
-          />
-          <button
-            type="button"
-            onClick={checkGiftUniqueness}
-            className="mt-2 bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition-all"
-            disabled={loading}
           >
-            {loading ? "Checking..." : "Check Uniqueness"}
-          </button>
+            <option value="">Select a gift</option>
+            {giftOptions.map((opt) => (
+              <option key={opt.id} value={opt.label}>{opt.label}</option>
+            ))}
+            <option value="Other">Other</option>
+          </select>
+
+          {/* Other input */}
+          {selectedGiftLabel === "Other" && (
+            <input
+              type="text"
+              value={otherGift}
+              onChange={(e) => setOtherGift(e.target.value)}
+              required
+              className="w-full mt-2 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              placeholder="Enter your gift"
+            />
+          )}
+
+          {/* Uniqueness check and inline message */}
+          <div className="mt-2 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={checkGiftUniqueness}
+              className="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition-all"
+              disabled={loading || !(selectedGiftLabel || otherGift)}
+            >
+              {loading ? "Checking..." : "Check Uniqueness"}
+            </button>
+            {isGiftUnique !== null && (
+              <span className={isGiftUnique ? "text-green-600" : "text-red-600"}>
+                {uniquenessMsg}
+              </span>
+            )}
+          </div>
         </div>
 
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
