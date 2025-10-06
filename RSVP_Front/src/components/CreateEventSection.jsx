@@ -84,6 +84,19 @@ const CreateEventSection = () => {
           >
             Copy Link
           </button>
+
+          <div className="mt-8">
+            <p className="text-gray-600">Private dashboard link (keep this safe):</p>
+            <div className="bg-gray-100 p-3 rounded-md mt-2 text-purple-700 font-medium">
+              {window.location.origin}/dashboard/{eventId}
+            </div>
+            <button
+              className="mt-3 bg-purple-700 text-white px-6 py-2 rounded-md text-lg hover:bg-purple-800 transition-all"
+              onClick={() => navigator.clipboard.writeText(`${window.location.origin}/dashboard/${eventId}`)}
+            >
+              Copy Dashboard Link
+            </button>
+          </div>
         </div>
       )}
     </div>

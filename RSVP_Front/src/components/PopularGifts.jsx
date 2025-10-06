@@ -7,7 +7,7 @@ const PopularGifts = () => {
     ];
   
     return (
-      <section className="w-full py-20 bg-purple-100 text-center">
+      <section id="gift-suggestions" className="w-full py-20 bg-purple-100 text-center">
         <div className="max-w-6xl mx-auto px-8">
           <h2 className="text-4xl font-bold text-gray-800">Popular Gift Suggestions</h2>
           <div className="flex flex-col md:flex-row justify-center mt-12 gap-8">
