@@ -32,9 +32,11 @@ const EventPage = () => {
         if (res.ok) {
           const data = await res.json();
           setGiftOptions(data || []);
+        } else {
+          console.error("Failed to fetch gift options:", res.status, await res.text());
         }
       } catch (e) {
-        // noop: in local dev without backend this may 404; keep form usable
+        console.error("Error fetching gift options:", e);
       }
     };
     fetchOptions();

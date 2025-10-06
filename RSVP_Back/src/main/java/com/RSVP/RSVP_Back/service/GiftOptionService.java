@@ -6,6 +6,7 @@ import com.RSVP.RSVP_Back.util.GiftTextUtil;
 import com.RSVP.RSVP_Back.util.GiftSimilarityUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,8 +18,20 @@ public class GiftOptionService {
         this.giftOptionRepository = giftOptionRepository;
     }
 
+    private static final List<String> DEFAULT_OPTIONS = Arrays.asList(
+            "Cake", "Bicycle", "Books", "Flowers", "Board Game",
+            "Chocolate", "Gift Card", "Wine", "Soft Drinks", "Snacks"
+    );
+
     public List<GiftOption> getOptions(UUID eventId) {
-        return giftOptionRepository.findByEventIdOrderByFrequencyDesc(eventId);
+        List<GiftOption> options = giftOptionRepository.findByEventIdOrderByFrequencyDesc(eventId);
+        if (options.isEmpty()) {
+            for (String label : DEFAULT_OPTIONS) {
+                resolveOrCreateOption(eventId, label);
+            }
+            options = giftOptionRepository.findByEventIdOrderByFrequencyDesc(eventId);
+        }
+        return options;
     }
 
     /**
